@@ -2,6 +2,7 @@ package br.com.joaocarloslima.posto.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Posto {
     private List<Cliente> fila = new ArrayList<>();
@@ -19,23 +20,44 @@ public class Posto {
 
     // TODO: abastecer o cliente, se ele tiver tanque
     public String abastecer(Long id) {
-        Cliente cliente = buscar(id);
-        return "Ainda não sei abastecer " + cliente.getNome();
+       Cliente cliente = buscar(id);
+
+       if(cliente instanceof Abastecivel abastecivel){
+           double litros = abastecivel.encherTanque();
+
+           return String.format(Locale.forLanguageTag("pt-BR"), "%s abastecido com %.1f litros", cliente.getNome(), litros);
+       }
+       return cliente.getNome() + " não usa a bomba de combustivel ";
     }
 
     // TODO: recarregar o cliente, se ele tiver bateria
     public String recarregar(Long id) {
         Cliente cliente = buscar(id);
-        return "Ainda não sei recarregar " + cliente.getNome();
+
+
+        if(cliente instanceof Recarregavel recarregavel){
+            double energia = recarregavel.carregarBateria();
+
+            return String.format(Locale.forLanguageTag("pt-BR"), "%s recarregado com %.1f kWh", cliente.getNome(), energia);
+        }
+        return cliente.getNome() + " não usa o carregador ";
     }
 
     // TODO: percentual do tanque para a barra da tela (null = não tem tanque)
     public Integer percentualTanque(Cliente cliente) {
+        if (cliente instanceof Abastecivel abastecivel){
+            return abastecivel.getPercentualTanque();
+        }
         return null;
     }
 
     // TODO: percentual da bateria para a barra da tela (null = não tem bateria)
     public Integer percentualBateria(Cliente cliente) {
+
+        if (cliente instanceof Recarregavel recarregavel){
+            return recarregavel.getPercentualBateria();
+        }
+
         return null;
     }
 

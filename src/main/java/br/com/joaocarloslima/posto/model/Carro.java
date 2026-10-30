@@ -1,6 +1,6 @@
 package br.com.joaocarloslima.posto.model;
 
-public class Carro extends Veiculo {
+public class Carro extends Veiculo implements Abastecivel{
     private double capacidadeTanque; // em litros
     private double tanque;
 
@@ -10,8 +10,28 @@ public class Carro extends Veiculo {
         this.tanque = tanque;
     }
 
+
+   @Override
+    public double encherTanque(){
+        double quantidade = Math.max(0, capacidadeTanque - tanque);
+
+        tanque += quantidade;
+
+        return quantidade;
+    }
+
+    @Override
+    public int getPercentualTanque(){
+        if (capacidadeTanque <= 0){
+            return 0;
+        }
+
+        return (int) Math.round((tanque / capacidadeTanque) * 100);
+    }
+
     @Override
     public String getIcone() {
         return "🚗";
     }
+
 }
